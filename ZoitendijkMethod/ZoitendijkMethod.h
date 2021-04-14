@@ -19,9 +19,16 @@ public:
 private:
 	void init_first_approximation();
 	double limitation_value(size_t index, xn_t const& x);
+	xn_t solve_subtask(xn_t const& x, std::vector<size_t> const& almost_active);
+
+	double find_next_alpha(xn_t const& xk, double eta_k, xn_t const& s_k);
 
 	static double dot_product(xn_t const& x, xn_t const& y);
+	static void scale(xn_t& vec, double mult);
+	static xn_t add(xn_t const& x, xn_t const& y);
+
 	std::vector<size_t> build_almost_active(xn_t const& x);
+	double delta_null_active(xn_t const& x);
 
 	size_t dim;
 	xn_t x0;

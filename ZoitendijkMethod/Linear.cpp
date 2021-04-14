@@ -181,9 +181,9 @@ double Linear::calculate_objective(std::vector<double>& x) {
 }
 
 Matrix& Linear::get_matrix() {
-	std::cout << "copied A:\n";
+	/*std::cout << "copied A:\n";
 	A.print();
-	std::cout << "\n\n\n";
+	std::cout << "\n\n\n";*/
 	return A;
 }
 
@@ -268,11 +268,11 @@ Matrix Linear::sub_matrix(std::vector<size_t>& vec) {
 }
 
 std::vector<double> Linear::back_to_original_vars(std::vector<double>& x) {
-	std::cout << "\nCanonical: ";
+	/*std::cout << "\nCanonical: ";
 	for (auto elem : x) {
 		std::cout << elem << ' ';
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 	std::vector<double> vars(original_dimension);
 	for (size_t i = 0; i < original_dimension; ++i) {
 		if (original_vars[i].first == original_vars[i].second) {
@@ -297,11 +297,18 @@ std::vector<double> Linear::solve_task() {
 
 	do {
 		Matrix submatrix = sub_matrix(vectors_in_basis);
+		//std::cout << "Next combination:\n";
+		/*for (auto elem : vectors_in_basis) {
+			std::cout << elem << " <> ";
+		}*/
+		//std::cout << std::endl;
 		if (is_linear_independence(submatrix)) {
 			std::vector<double> x(canonical_dimension);
 			std::vector<double> res(b.size());
 
 			res = SeidelMethod::solve(submatrix, b);
+
+			//std::cout << "~~~~~~~~~~~~~~~~\n";
 
 			if (in_allowable_area(res)) {
 				for (size_t i = 0; i < b.size(); ++i) {
@@ -321,11 +328,12 @@ std::vector<double> Linear::solve_task() {
 				}
 
 			}
+			//std::cout << "!!!!!!!!!!!!!!!!!!!!!!!\n";
 		}
 	} while (next_combination(vectors_in_basis, canonical_dimension));
 
 	//std::cout << "\nMin: " << min;
-	std::cout << "\nVector:\n";
+	/*std::cout << "\nVector:\n";
 	for (auto elem : optimal) {
 		std::cout << elem << ' ';
 	}
@@ -333,7 +341,7 @@ std::vector<double> Linear::solve_task() {
 	std::cout << "Original:\n";
 	for (auto elem : vars) {
 		std::cout << elem << ' ';
-	}
+	}*/
 
 	return back_to_original_vars(optimal);
 }

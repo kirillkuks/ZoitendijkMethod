@@ -48,9 +48,10 @@ int main() {
 
 	limitations.add_limitations({ {-1, -1, 5}, LT::LT_LE });
 	std::function<xn_t(xn_t const&)> grad4 = [](xn_t const&) -> xn_t { return { -1, -1 }; };
-	Function func4([](xn_t const& x) -> double { return - x[0] - x[1] + 2; }, grad4);
+	Function func4([](xn_t const& x) -> double { return - x[0] - x[1] - 5; }, grad4);
 
-	ZoitendijkMethod method(Function(func, grad), 2);
+	Function function(func, grad);
+	ZoitendijkMethod method(function, 2);
 
 	method.set_limitaions(limitations, { func1, func2, func3, func4 });
 	method.calculate();

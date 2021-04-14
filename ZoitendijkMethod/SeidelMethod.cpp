@@ -6,7 +6,7 @@ std::vector<double> SeidelMethod::solve(Matrix& A, std::vector<double>& b) {
 	Matrix B = A.get_transposed();
 	Matrix C = multy(B, A);
 	g = b_create(B, b);
-
+	size_t counter = 0;
 	do {
 		for (size_t j = 0; j < x0.size(); ++j) {
 			x0[j] = x[j];
@@ -26,7 +26,8 @@ std::vector<double> SeidelMethod::solve(Matrix& A, std::vector<double>& b) {
 			err[j] -= b[j];
 		}
 		//std::cout << "Norm: " << norm(err) << std::endl;
-	} while (norm(err) > 1E-5);
+		++counter;
+	} while (norm(err) > 1E-5 && counter < 200);
 	return x;
 }
 

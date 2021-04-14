@@ -20,6 +20,7 @@ double Function::dot_product(xn_t const& x, xn_t const& y) {
 }
 
 double Function::operator()(xn_t const& x) {
+	++counter;
 	switch (ft) {
 	case FuncType::NORMAL:
 		return func(x);
@@ -30,5 +31,14 @@ double Function::operator()(xn_t const& x) {
 }
 
 std::vector<double> Function::gradient_at(xn_t const& x) {
+	++gradient_counter;
 	return grad(x);
+}
+
+size_t Function::get_counter() const {
+	return counter;
+}
+
+size_t Function::get_gradient_counter() const {
+	return gradient_counter;
 }
