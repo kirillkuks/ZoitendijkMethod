@@ -1,4 +1,5 @@
 #include "Linear.h"
+#include "SeidelMethod.h"
 
 Limitations::Limitations() {}
 
@@ -28,7 +29,7 @@ Linear::Linear(std::vector<double>& function, Limitations& limitations, std::vec
 
 	to_canonical(function, limitations, vars_sign);
 
-	to_dual(function, limitations, vars_sign);
+	//to_dual(function, limitations, vars_sign);
 
 	/*std::cout << "\n*****************************************\n";
 	for (auto elem : function) {
@@ -47,7 +48,7 @@ Linear::Linear(std::vector<double>& function, Limitations& limitations, std::vec
 	}
 	std::cout << "\n*****************************************\n";*/
 
-	dual_program = new Linear(function, limitations, vars_sign, this);
+	//dual_program = new Linear(function, limitations, vars_sign, this);
 }
 
 Linear::Linear(std::vector<double>& function, Limitations& limitations, std::vector<bool>& vars_sign, Linear* dual_program)
@@ -180,13 +181,9 @@ double Linear::calculate_objective(std::vector<double>& x) {
 }
 
 Matrix& Linear::get_matrix() {
-	for (size_t i = 0; i < A.get_n(); ++i) {
-		for (size_t j = 0; j < A.get_m(); ++j) {
-			std::cout << A[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << "End\n";
+	std::cout << "copied A:\n";
+	A.print();
+	std::cout << "\n\n\n";
 	return A;
 }
 
@@ -198,7 +195,7 @@ std::vector<double>& Linear::get_obj_func() {
 	return objective_function;
 }
 
-/*bool Linear::next_combination(std::vector<size_t>& vec, size_t n) {
+bool Linear::next_combination(std::vector<size_t>& vec, size_t n) {
 	size_t k = vec.size();
 	int i;
 	for (i = k - 1; i >= 0 && vec[i] == n - 1; --i, --n) {}
@@ -311,11 +308,11 @@ std::vector<double> Linear::solve_task() {
 					x[vectors_in_basis[i]] = res[i];
 				}
 
-				std::cout << "x:\n";
+				/*std::cout << "x:\n";
 				for (auto elem : x) {
 					std::cout << elem << " ";
 				}
-				std::cout << std::endl;
+				std::cout << std::endl;*/
 
 				double potentional_optimal = calculate_objective(x);
 				if ((task_type == TT::TT_MIN && limit_value > potentional_optimal) || (task_type == TT::TT_MAX && limit_value < potentional_optimal)) {
@@ -327,7 +324,7 @@ std::vector<double> Linear::solve_task() {
 		}
 	} while (next_combination(vectors_in_basis, canonical_dimension));
 
-	std::cout << "\nMin: " << min;
+	//std::cout << "\nMin: " << min;
 	std::cout << "\nVector:\n";
 	for (auto elem : optimal) {
 		std::cout << elem << ' ';
@@ -339,4 +336,4 @@ std::vector<double> Linear::solve_task() {
 	}
 
 	return back_to_original_vars(optimal);
-}*/
+}

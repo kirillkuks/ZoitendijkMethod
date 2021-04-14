@@ -36,27 +36,27 @@ struct Linear {
 public:
 	Linear(std::vector<double>&, Limitations&, std::vector<bool>&);
 
-	//std::vector<double> solve_task();
+	std::vector<double> solve_task();
 	Matrix& get_matrix();
 	std::vector<double>& get_b();
 	std::vector<double>& get_obj_func();
 
+	std::vector<double> back_to_original_vars(std::vector<double>&);
 
 	Linear* get_dual_program();
 private:
 	static size_t vars_in_canonical(std::vector<double>&, Limitations&, std::vector<bool>&);
-	//static bool next_combination(std::vector<size_t>&, size_t);
+	static bool next_combination(std::vector<size_t>&, size_t);
 
 	Linear(std::vector<double>&, Limitations&, std::vector<bool>&, Linear*);
 	void to_canonical(std::vector<double>&, Limitations&, std::vector<bool>&);
 	void to_dual(std::vector<double>&, Limitations&, std::vector<bool>&);
 
-	//bool is_linear_independence(Matrix&);
+	bool is_linear_independence(Matrix&);
 	double calculate_objective(std::vector<double>&);
-	//Matrix sub_matrix(std::vector<size_t>&);
-	//double determinant(Matrix);
-	//bool in_allowable_area(std::vector<double>&);
-	//std::vector<double> back_to_original_vars(std::vector<double>&);
+	Matrix sub_matrix(std::vector<size_t>&);
+	double determinant(Matrix);
+	bool in_allowable_area(std::vector<double>&);
 
 	size_t original_dimension;
 

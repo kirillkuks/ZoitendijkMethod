@@ -5,6 +5,7 @@
 Simplex::Simplex(Matrix& A, std::vector<double>& st, std::vector<double>& c, TT type_task) {
 	have_ans = true;
 	std::vector<double> b = A.gauss(st);
+	A.print();
 	for (size_t i = 0; i < A.get_n(); i++) {
 		std::vector<double> time_vector;
 		time_vector.push_back(b[i]);
@@ -209,15 +210,23 @@ void Simplex::Choose(size_t i, size_t min1) {
 	Positive_b();
 }
 
-double Simplex::answer_func() {
+std::vector<double> Simplex::answer_func() {
+	std::vector<double> ans(data[0].first.size() - 1);
 	if (have_ans) {
-		std::cout << "x[i]:" << std::endl;
-		for (size_t i = 0; i < data[0].first.size(); i++) {
-			std::cout << data[0].first[i] << ' ';
+		for (size_t i = 0; i < ans.size(); i++) {
+			ans[i] = 0;
 		}
-		return answer;
+		for (size_t i = 0; i < data.size(); i++) {
+			ans[data[i].second] = data[i].first[0];
+		}
+		std::cout << "Answer Simplex" << std::endl;
+		for (size_t i = 0; i < ans.size(); i++) {
+			std::cout << ans[i] << " ";
+		}
+		std::cout << std::endl;
+		return ans;
 	}
 	else {
-		return NAN;
+		return std::vector<double>();
 	}
 }
