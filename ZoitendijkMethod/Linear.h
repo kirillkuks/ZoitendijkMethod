@@ -40,7 +40,7 @@ public:
 	Matrix& get_matrix();
 	std::vector<double>& get_b();
 	std::vector<double>& get_obj_func();
-
+	std::vector<double> back_to_original_vars(std::vector<double>&);
 
 	Linear* get_dual_program();
 private:

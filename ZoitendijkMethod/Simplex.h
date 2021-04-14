@@ -8,7 +8,7 @@
 class Simplex {
 public:
 	Simplex(Matrix&, std::vector<double>&, std::vector<double>&, TT type_task);
-	double answer_func();
+	std::vector<double> answer_func();
 
 private:
 	std::vector<std::pair<std::vector<double>, size_t>> data;

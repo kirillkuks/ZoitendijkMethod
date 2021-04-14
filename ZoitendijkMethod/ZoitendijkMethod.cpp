@@ -51,7 +51,13 @@ void ZoitendijkMethod::init_first_approximation() {
 	std::vector<bool> var_signs(dim + 1);
 	Linear subtask(objective_function, lims, var_signs);
 	Simplex simplex(subtask.get_matrix(), subtask.get_b(), subtask.get_obj_func(), TT::TT_MIN);
-	simplex.answer_func();
+	auto optimal = simplex.answer_func();
+	optimal = subtask.back_to_original_vars(optimal);
+	std::cout << "Optimal" << std::endl;
+	for (size_t i = 0; i < optimal.size(); i++) {
+		std::cout << optimal[i] << " ";
+	}
+	std::cout << std::endl;
 }
 
 void ZoitendijkMethod::calculate() {

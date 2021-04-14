@@ -268,7 +268,7 @@ Matrix Linear::sub_matrix(std::vector<size_t>& vec) {
 		}
 	}
 	return submatrix;
-}
+}*/
 
 std::vector<double> Linear::back_to_original_vars(std::vector<double>& x) {
 	std::cout << "\nCanonical: ";
@@ -288,7 +288,7 @@ std::vector<double> Linear::back_to_original_vars(std::vector<double>& x) {
 	return vars;
 }
 
-std::vector<double> Linear::solve_task() {
+/*std::vector<double> Linear::solve_task() {
 	size_t canonical_dimension = objective_function.size();
 	std::vector<double> optimal(canonical_dimension);
 	double limit_value = task_type == TT::TT_MIN ? std::numeric_limits<double>::infinity() : -std::numeric_limits<double>::infinity();
