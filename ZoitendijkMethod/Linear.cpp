@@ -140,7 +140,7 @@ void Linear::to_canonical(std::vector<double>& function, Limitations& limitation
 	}
 
 	//Для проверки
-	std::cout << "c:\n";
+	/*std::cout << "c:\n";
 	for (auto elem : objective_function) {
 		std::cout << elem << ' ';
 	}
@@ -150,7 +150,7 @@ void Linear::to_canonical(std::vector<double>& function, Limitations& limitation
 	for (auto elem : b) {
 		std::cout << elem << ' ';
 	}
-	std::cout << std::endl;
+	std::cout << std::endl;*/
 }
 
 Linear* Linear::get_dual_program() {

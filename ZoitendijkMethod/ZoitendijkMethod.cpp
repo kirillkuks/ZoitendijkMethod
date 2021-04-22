@@ -2,7 +2,7 @@
 
 #include "ZoitendijkMethod.h"
 
-#define eps 10e-5
+#define eps 1e-4
 
 double ZoitendijkMethod::dot_product(xn_t const& x, xn_t const& y) {
 	size_t size = x.size();
@@ -40,6 +40,9 @@ void ZoitendijkMethod::set_function(Function const& objective_func_) {
 }
 
 void ZoitendijkMethod::init_first_approximation() {
+	std::vector<double> x0(dim + 1);
+
+
 	std::vector<double> objective_function(dim + 1);
 	objective_function[0] = 1;
 	Limitations lims;
@@ -52,12 +55,12 @@ void ZoitendijkMethod::init_first_approximation() {
 		lims.add_limitations(cond);
 	}
 
-	for (auto& lim : lims.limitations) {
+	/*for (auto& lim : lims.limitations) {
 		for (auto elem : lim.first) {
 			std::cout << elem << " | ";
 		}
 		std::cout << std::endl;
-	}
+	}*/
 	std::vector<bool> var_signs(dim + 1);
 	Linear subtask(objective_function, lims, var_signs);
 	Simplex simplex(subtask.get_matrix(), subtask.get_b(), subtask.get_obj_func(), TT::TT_MIN);
@@ -68,12 +71,13 @@ void ZoitendijkMethod::init_first_approximation() {
 	for (size_t i = 0; i < dim; ++i) {
 		x0[i] = optimal[i + 1];
 	}
-	/*std::cout << "Delta: " << delta << std::endl;
+	std::cout << "Delta: " << delta << std::endl;
 	std::cout << "First Approximation\n";
 	for (auto elem : x0) {
 		std::cout << elem << ", ";
 	}
-	std::cout << std::endl;*/
+	std::cout << "\n\n\n\n\n";
+
 	//Simplex simplex(subtask.get_matrix(), subtask.get_b(), subtask.get_obj_func(), TT::TT_MIN);
 	//simplex.answer_func();
 }
@@ -152,6 +156,23 @@ std::vector<double> ZoitendijkMethod::add(xn_t const& x, xn_t const& y) {
 	return res;
 }
 
+void print(std::vector<double> const& vec) {
+	std::cout << "(";
+	for (auto elem : vec) {
+		std::cout << elem << ", ";
+	}
+	std::cout << "\b\b)";
+}
+
+bool ZoitendijkMethod::is_in_area(xn_t const& x) const {
+	for (size_t i = 0; i < limitations.limititation_size(); ++i) {
+		if (limitation_value(i, x) >= 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
 double ZoitendijkMethod::find_next_alpha(xn_t const& xk, double eta_k, xn_t const& s_k) {
 	double alpha = 1;
 	xn_t s = s_k;
@@ -166,7 +187,15 @@ double ZoitendijkMethod::find_next_alpha(xn_t const& xk, double eta_k, xn_t cons
 		scale(sa, alpha);
 		func_val = objective_function(add(xk, sa));
 	}
-	
+	xn_t sa = s;
+	scale(sa, alpha);
+	while (!is_in_area(add(xk, sa))) {
+		std::cout << "Not in area\n";
+		alpha *= lamda;
+		sa = s;
+		scale(sa, alpha);
+	}
+
 	std::cout << "Alpha = " << alpha << std::endl;
 
 	return alpha;
@@ -174,21 +203,25 @@ double ZoitendijkMethod::find_next_alpha(xn_t const& xk, double eta_k, xn_t cons
 
 void ZoitendijkMethod::calculate() {
 	init_first_approximation();
-	for (size_t i = 0; i < limitations.limititation_size(); ++i) {
+	/*for (size_t i = 0; i < limitations.limititation_size(); ++i) {
 		std::cout << "Value" << i << ": " << limitation_value(i, x0) << std::endl;
-	}
+	}*/
 	//auto almost_active = build_almost_active(x0);
 	auto xk = x0;
 	double eta_k = 0;
 	double delta0 = 0;
 	size_t i = 0;
+	std::cout << "$ " << i << " $ & $ ";
+	print(xk);
+	std::cout << " $ & $ " << delta << " $ & $ " << eta_k << " $ & $ " << objective_function(xk) << " $ " << std::endl;
 	do {
 		++i;
+
 		auto almost_active = build_almost_active(xk);
 		auto eta_s = solve_subtask(xk, almost_active);
 		double eta = eta_s[0];
 		eta_k = eta;
-		std::cout << "Eta: " << eta << std::endl;
+		//std::cout << "Eta: " << eta << std::endl;
 
 		if (eta < -delta) {
 			xn_t s(eta_s.size() - 1);
@@ -204,12 +237,16 @@ void ZoitendijkMethod::calculate() {
 		}
 		delta0 = delta_null_active(xk);
 
+		std::cout << "$ " << i << " $ & $ ";
+		print(xk);
+		std::cout << " $ & $ " << delta << " $ & $ " << eta_k << " $ & $ " << objective_function(xk) << " $ " << std::endl;
+		std::cout << delta0 << std::endl;
 	} while (!(-eta_k < eps && delta < delta0));
 
-	std::cout << "Xk:\n";
+	/*std::cout << "Xk:\n";
 	for (size_t i = 0; i < xk.size(); ++i) {
 		std::cout << xk[i] << " ";
-	}
+	}*/
 
 	std::cout << "\nCounter:\n";
 	std::cout << objective_function.get_counter();
@@ -228,6 +265,7 @@ std::vector<size_t> ZoitendijkMethod::build_almost_active(xn_t const& x) {
 			//std::cout << "Number: " << i << std::endl;
 		}
 	}
+	std::cout << "Size: " << almost_active.size() << std::endl;
 	return almost_active;
 }
 
@@ -236,16 +274,16 @@ double ZoitendijkMethod::delta_null_active(xn_t const& x) {
 	for (size_t i = 0; i < limitations.limititation_size(); ++i) {
 		double val = limitation_value(i, x);
 		if (!(-eps <= val && val <= 0)) {
-			double md = gradients[i](x);
-			if (md > d) {
-				d = md;
+			// double md = gradients[i](x);
+			if (val > d) {
+				d = val;
 			}
 		}
 	}
 	return -d;
 }
 
-double ZoitendijkMethod::limitation_value(size_t index, xn_t const& x) {
+double ZoitendijkMethod::limitation_value(size_t index, xn_t const& x) const {
 	size_t size = x.size();
 	assert(index < limitations.limititation_size());
 

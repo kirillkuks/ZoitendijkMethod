@@ -34,7 +34,9 @@ int main() {
 	Linear linear(of, limitaions, signs);*/
 
 	Limitations limitations;
-	limitations.add_limitations({ {2, 1, 2}, LT::LT_LE });
+
+	// Точка внутри области
+	/*limitations.add_limitations({ {2, 1, 2}, LT::LT_LE });
 	std::function<xn_t(xn_t const&)> grad1 = [](xn_t const&) -> xn_t { return { 2, 1 }; };
 	Function func1([](xn_t const& x) -> double { return 2 * x[0] + x[1] - 2; }, grad1);
 
@@ -48,7 +50,24 @@ int main() {
 
 	limitations.add_limitations({ {-1, -1, 5}, LT::LT_LE });
 	std::function<xn_t(xn_t const&)> grad4 = [](xn_t const&) -> xn_t { return { -1, -1 }; };
-	Function func4([](xn_t const& x) -> double { return - x[0] - x[1] - 5; }, grad4);
+	Function func4([](xn_t const& x) -> double { return - x[0] - x[1] - 5; }, grad4);*/
+
+	// Точка на границе
+	limitations.add_limitations({ {2, 1, 2}, LT::LT_LE });
+	std::function<xn_t(xn_t const&)> grad1 = [](xn_t const&) -> xn_t { return { 2, 1 }; };
+	Function func1([](xn_t const& x) -> double { return 2 * x[0] + x[1] -2; }, grad1);
+
+	limitations.add_limitations({ {-1, 1, 3}, LT::LT_LE });
+	std::function<xn_t(xn_t const&)> grad2 = [](xn_t const&) -> xn_t { return { -1, 1 }; };
+	Function func2([](xn_t const& x) -> double { return -x[0] + x[1] - 3; }, grad2);
+
+	limitations.add_limitations({ {3, -2, 4}, LT::LT_LE });
+	std::function<xn_t(xn_t const&)> grad3 = [](xn_t const&) -> xn_t { return { 3, -2 }; };
+	Function func3([](xn_t const& x) -> double { return 3 * x[0] - 2 * x[1] -4; }, grad3);
+
+	limitations.add_limitations({ {-1, -1, 0.182}, LT::LT_LE });
+	std::function<xn_t(xn_t const&)> grad4 = [](xn_t const&) -> xn_t { return { -1, -1 }; };
+	Function func4([](xn_t const& x) -> double { return -x[0] - x[1] - 0.182; }, grad4);
 
 	Function function(func, grad);
 	ZoitendijkMethod method(function, 2);

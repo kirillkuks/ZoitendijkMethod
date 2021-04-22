@@ -18,9 +18,10 @@ public:
 
 private:
 	void init_first_approximation();
-	double limitation_value(size_t index, xn_t const& x);
+	double limitation_value(size_t index, xn_t const& x) const;
 	xn_t solve_subtask(xn_t const& x, std::vector<size_t> const& almost_active);
 
+	bool is_in_area(xn_t const& x) const;
 	double find_next_alpha(xn_t const& xk, double eta_k, xn_t const& s_k);
 
 	static double dot_product(xn_t const& x, xn_t const& y);

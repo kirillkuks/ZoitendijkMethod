@@ -91,7 +91,7 @@ size_t Simplex::Determine(size_t i) {
 		if (data[j].first[i] > EPS && (data[j].first[0] / data[j].first[i] < data[min1].first[0] / data[min1].first[i])) {
 			min1 = j;
 		}
-		std::cout << data[j].first[0] / data[j].first[i] << std::endl;
+		//std::cout << data[j].first[0] / data[j].first[i] << std::endl;
 	}
 	return min1;
 }
@@ -219,11 +219,11 @@ std::vector<double> Simplex::answer_func() {
 		for (size_t i = 0; i < data.size(); i++) {
 			ans[data[i].second] = data[i].first[0];
 		}
-		std::cout << "Answer Simplex" << std::endl;
+		/*std::cout << "Answer Simplex" << std::endl;
 		for (size_t i = 0; i < ans.size(); i++) {
 			std::cout << ans[i] << " ";
 		}
-		std::cout << std::endl;
+		std::cout << std::endl;*/
 		return ans;
 	}
 	else {
